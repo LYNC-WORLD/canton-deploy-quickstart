@@ -1,0 +1,28 @@
+module Setup where
+
+import Daml.Script
+import DA.List (find)
+import qualified DA.Text as T
+import Asset
+
+-- Alice and Bob are allocated by canton-deploy from the `parties` list in
+-- canton-deploy.config.js before this script runs. The script looks them up
+-- instead of calling allocatePartyByHint, which would fail on a second allocation.
+lookupParty : Text -> Script Party
+lookupParty hint = do
+  known <- listKnownParties
+  case find (\d -> T.isPrefixOf (hint <> "::") (partyToText d.party)) known of
+    Some d -> pure d.party
+    None   -> abort ("Party " <> hint <> " not found. Is it listed under `parties` in canton-deploy.config.js?")
+
+setup : Script ()
+setup = do
+  alice <- lookupParty "Alice"
+  bob   <- lookupParty "Bob"
+  cid <- submit alice $ createCmd Asset with
+    issuer = alice
+    owner = alice
+    name = "Quickstart Token"
+    quantity = 100.0
+  _ <- submit alice $ exerciseCmd cid Transfer with newOwner = bob
+  pure ()

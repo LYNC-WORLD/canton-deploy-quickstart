@@ -1,0 +1,9 @@
+name: asset-tests
+version: 0.1.0
+source: daml
+dependencies:
+  - daml-prim
+  - daml-stdlib
+  - daml-script
+data-dependencies:
+  - ../asset/.daml/dist/asset-0.1.0.dar

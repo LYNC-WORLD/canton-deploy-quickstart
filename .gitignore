@@ -1,0 +1,4 @@
+.daml/
+.dpm/
+.env
+*.log

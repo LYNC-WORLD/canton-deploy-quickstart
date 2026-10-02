@@ -1,0 +1,19 @@
+module AssetTest where
+
+import Daml.Script
+import Asset
+
+-- Runs with `dpm test`. This package is built but never uploaded:
+-- canton-deploy.config.js lists it under excludePackages.
+transferMovesOwnership : Script ()
+transferMovesOwnership = do
+  alice <- allocateParty "Alice"
+  bob   <- allocateParty "Bob"
+  cid <- submit alice $ createCmd Asset with
+    issuer = alice
+    owner = alice
+    name = "Test Token"
+    quantity = 10.0
+  newCid <- submit alice $ exerciseCmd cid Transfer with newOwner = bob
+  Some asset <- queryContractId bob newCid
+  assert (asset.owner == bob)

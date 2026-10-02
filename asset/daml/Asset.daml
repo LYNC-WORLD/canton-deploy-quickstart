@@ -1,0 +1,19 @@
+module Asset where
+
+-- A minimal issued asset. The issuer signs; the current owner can transfer it.
+template Asset
+  with
+    issuer   : Party
+    owner    : Party
+    name     : Text
+    quantity : Decimal
+  where
+    signatory issuer
+    observer owner
+    ensure quantity > 0.0
+
+    choice Transfer : ContractId Asset
+      with
+        newOwner : Party
+      controller owner
+      do create this with owner = newOwner

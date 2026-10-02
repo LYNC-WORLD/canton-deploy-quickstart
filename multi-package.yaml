@@ -1,0 +1,9 @@
+packages:
+  - ./asset
+  - ./asset-tests
+
+components:
+  - damlc:3.5.2
+  - daml-script:3.5.2
+  - canton-open-source:3.5.17
+  - oci://ghcr.io/lync-world/canton-deploy:0.2.2@sha256:10b6552b3d249f3958ad25541f26688951a75f4a198a25c5c19cbcb19ce0b53d # 0.2.2
